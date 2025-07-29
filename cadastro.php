@@ -56,11 +56,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Cadastrar Pokémon</title>
 </head>
 <body>
+    <section id="secao1">
     <div id='voltar'>
                 <button class="botaoVoltar2" onclick="window.location.href='index.php'">⭠ Voltar</button>
             </div>
-<section class="secao-cadastro">
-    
+    <div class="secao-cadastro">
     <div class="box-cadastro">
         <form action="" method="POST" id="form-cadastro-aluno">
             <h1>Cadastre um Pokémon</h1>
@@ -113,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             <button id="botao-cadastrar" type="submit">Cadastrar</button>
         </form>
+    </div>
     </div>
 </section>
 </body>
