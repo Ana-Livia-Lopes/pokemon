@@ -61,6 +61,7 @@
             ?>
         </tbody>
     </table>  
+    <button id="btn-adicionar" onclick="window.location.href='cadastro.php'">Adicionar um Pokémon</button>
     <hr>
     <h2>Pesquisar Pokémon</h2>
     <form action="" method="post">
@@ -68,7 +69,7 @@
         <button id="search" type="submit">Pesquisar</button>
     </form>
 
-<button onclick="window.location.href='cadastro.php'">Adicionar um Pokémon</button>
+
     <?php
     $pesquisa = "";
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['titulo'])) {
@@ -94,7 +95,32 @@
     }
 
     ?>
-
+ <hr>
+    <button id="btn-estatisticas" style="margin-bottom:5px;">estatísticas de tipos</button>
+    <div id="estatisticas-tipos" style="display:none;">
+        <h2>Estatísticas de Tipos de Pokémon</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $sql_stats = "SELECT tipo_pokemon, COUNT(*) AS quantidade FROM cadastrar_pokemon GROUP BY tipo_pokemon ORDER BY quantidade DESC";
+                $result_stats = $conexao->query($sql_stats);
+                if ($result_stats && $result_stats->num_rows > 0) {
+                    while($row = $result_stats->fetch_assoc()) {
+                        echo "<tr><td>" . $row['tipo_pokemon'] . "</td><td>" . $row['quantidade'] . "</td></tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='2'>Nenhum dado encontrado</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
     </div>  
     <script>
 function editarPokemon(id, nome, tipo, local, data, hp, ataque, defesa, obs) {
@@ -151,6 +177,15 @@ function editarPokemon(id, nome, tipo, local, data, hp, ataque, defesa, obs) {
             });
         }
     });
+}
+document.getElementById('btn-estatisticas').onclick = function() {
+    var div = document.getElementById('estatisticas-tipos');
+    div.style.display = (div.style.display === 'none') ? 'block' : 'none';
+    if (div.style.display === 'block') {
+        setTimeout(function() {
+            div.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
 }
 </script> 
 </body>

@@ -8,7 +8,7 @@ body {
     background-size: cover;
     width: 100%;
     text-align: center;
-    height: 810px;  
+    height: 87vh;  
     margin-bottom: 40px;
 }
 
@@ -17,11 +17,14 @@ body {
     padding: 20px;
     padding-bottom: 40px;
     background-color: rgba(255, 255, 255, 0.933);
-    box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.233);
-    border-radius: 4px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+    
+    border-radius: 15px;
     text-align: center;
     max-width: 900px;
     margin: 50px auto;
+    height: 80vh;
+    overflow-y: auto;
 }
 table{
     width: 90%;
@@ -72,7 +75,7 @@ thead tr {
 }
 thead th {
     padding: 10px 10px;
-    box-shadow: rgba(50, 50, 93, 0.175) 0px 50px 100px -20px, rgba(0, 0, 0, 0.186) 0px 30px 60px -30px, rgba(10, 37, 64, 0.164) 0px -2px 6px 0px inset;
+    box-shadow: rgba(50, 50, 93, 0.103) 0px 50px 100px -20px, rgba(0, 0, 0, 0.141) 0px 30px 60px -30px, rgba(10, 37, 64, 0.196) 0px -2px 6px 0px inset;
     font-weight: 600;
     border: none;
 }
@@ -103,6 +106,24 @@ tbody tr:not(:last-child) {
     cursor: pointer;
 }
 
+#btn-adicionar{
+    background-color: rgb(99, 133, 221);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+#btn-estatisticas{
+    background-color: rgb(99, 133, 221);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
 @media(max-width: 768px){
     table{
         font-size: 10px;
