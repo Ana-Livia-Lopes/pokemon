@@ -67,8 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <label for="nome">Nome</label>
             <input class="campo-inserir" type="text" name="nome" required>
             
+            <div>
             <label for="tipo">Tipo</label>
-            <select name="tipo" id="">
+            <div>
+            <select name="tipo" id="select-tipo">
                 <option>Normal</option>
                 <option>Fogo</option>
                 <option>Água</option>
@@ -88,6 +90,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <option>Sombrio</option>
                 <option>Fada</option>
             </select>
+            </div>
+            </div>
 
             <label for="loc">Localização encontrada</label>
             <input class="campo-inserir" type="text" name="loc" required>
@@ -105,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <input class="campo-inserir" type="text" name="defesa" required>
 
             <label for="obs">Observações</label>
-            <input class="campo-inserir" type="text" name="obs" required>
+            <input class="campo-inserir" type="text" name="obs">
             
             <button id="botao-cadastrar" type="submit">Cadastrar</button>
         </form>
