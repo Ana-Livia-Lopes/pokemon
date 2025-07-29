@@ -39,11 +39,12 @@
             $resultado_pokemons = $conexao->query($sql);
             if ($resultado_pokemons->num_rows >0 ){
                 while($linha = $resultado_pokemons->fetch_assoc()){
+                    $data_formatada = date('d/m/Y', strtotime($linha['data_pokemon']));
                     echo"<tr>
 <td>".$linha['nome_pokemon']."</td>
 <td>".$linha['tipo_pokemon']."</td>
 <td>".$linha['loc_pokemon']."</td>
-<td>".$linha['data_pokemon']."</td>
+<td>".$data_formatada."</td>
 <td>".$linha['hp_pokemon']."</td>
 <td>".$linha['ataque_pokemon']."</td>
 <td>".$linha['defesa_pokemon']."</td>
