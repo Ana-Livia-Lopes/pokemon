@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
     <div id='voltar'>
-                <button class="botaoVoltar2" onclick="history.back()">⭠ Voltar</button>
+                <button class="botaoVoltar2" onclick="window.location.href='index.php'">⭠ Voltar</button>
             </div>
 <section class="secao-cadastro">
     
