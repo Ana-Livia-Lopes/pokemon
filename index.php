@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -22,18 +24,36 @@
                 <th>Ataque</th>
                 <th>Defesa</th>
                 <th>Observações</th>
+                <th>Editar</th>
             </tr>
         </thead>
         <tbody>
             <?php
             session_start();
             include 'conexao.php';
+            $sql = "SELECT * FROM cadastrar_pokemon";
+            $resultado_pokemons = $conexao->query($sql);
             if ($resultado_pokemons->num_rows >0 ){
                 while($linha = $resultado_pokemons->fetch_assoc()){
-                echo"<tr><td>".$linha['nome_pokemon']."</td><td>".$linha['tipo_pokemon']."</td><td>".$linha['loc_pokemon']."</td><td>".$linha['data_pokemon']."</td><td>".$linha['hp_pokemon']."</td><td>".$linha['ataque_pokemon']."</td><td>".$linha['defesa_pokemon']."</td><td>".$linha['obs_pokemon']."</td></tr>";
+                    echo"<tr><td>".$linha['nome_pokemon']."</td><td>".$linha['tipo_pokemon']."</td><td>".$linha['loc_pokemon']."</td><td>".$linha['data_pokemon']."</td><td>".$linha['hp_pokemon']."</td><td>".$linha['ataque_pokemon']."</td><td>".$linha['defesa_pokemon']."</td><td>".$linha['obs_pokemon']."</td><td><div class='btn-editar' onclick=\"editarPokemon('{$linha['id_pokemon']}', '{$linha['nome_pokemon']}', '{$linha['tipo_pokemon']}', '{$linha['loc_pokemon']}', '{$linha['data_pokemon']}', '{$linha['hp_pokemon']}', '{$linha['ataque_pokemon']}', '{$linha['defesa_pokemon']}', '{$linha['obs_pokemon']}')\"><i class='fa-solid fa-pencil'></i></div></td></tr>";
                 }
             }
-            
+            if (!empty($pesquisa)) {
+                $sql_pesquisa = "SELECT * FROM cadastrar_pokemon WHERE nome_pokemon LIKE ?";
+                $busca = "%".$pesquisa."%";
+                $stmt = $conexao->prepare($sql_pesquisa);
+                $stmt->bind_param("s", $busca);
+                $stmt->execute();
+                $resultados_pesquisa = $stmt->get_result();
+                if ($resultados_pesquisa->num_rows > 0) {
+                    while ($linha_pesq = $resultados_pesquisa->fetch_assoc()) {
+                        echo "<tr><td>" . $linha_pesq['nome_pokemon'] . "</td><td>" . $linha_pesq['tipo_pokemon'] . "</td><td>" . $linha_pesq['loc_pokemon'] . "</td><td>" . $linha_pesq['data_pokemon'] . "</td><td>" . $linha_pesq['hp_pokemon'] . "</td><td>" . $linha_pesq['ataque_pesquisa'] . "</td><td>" . $linha_pesq['defesa_pokemon'] . "</td><td>" . $linha_pesq['obs_pokemon'] . "</td><td><a href='editar_pokemon.php?id_pokemon=".$linha_pesq['id_pokemon']."' class='btn-editar'>Editar</a></td></tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='9'>Nenhum Pokémon encontrado com o nome: ".$pesquisa."</td></tr>";
+                }
+                $stmt->Close();
+            }
             ?>
         </tbody>
     </table>  
@@ -52,10 +72,10 @@
     }
 
     if (!empty($pesquisa)) {
-        $sql_pesquisa = "SELECT * FROM pokemons WHERE nome LIKE ? OR tipo LIKE ? OR local_encontrado LIKE ? OR data_registro LIKE ? OR hp LIKE ? OR ataque LIKE ? OR defesa LIKE ? OR observacoes LIKE ?";
+        $sql_pesquisa = "SELECT nome_pokemon FROM cadastrar_pokemon WHERE nome_pokemon LIKE ?";
         $busca = "%".$pesquisa."%";
         $stmt = $conexao->prepare($sql_pesquisa);
-        $stmt->bind_param("ssssssss", $busca, $busca, $busca, $busca, $busca, $busca, $busca, $busca);
+        $stmt->bind_param("s", $busca);
         $stmt->execute();
         $resultados_pesquisa = $stmt->get_result();
     
@@ -72,5 +92,62 @@
     ?>
 
     </div>  
+    <script>
+function editarPokemon(id, nome, tipo, local, data, hp, ataque, defesa, obs) {
+    Swal.fire({
+        title: 'Editar Pokémon',
+        html:
+            `<input id='swal-nome' class='swal2-input' placeholder='Nome' value='${nome}'>` +
+            `<input id='swal-tipo' class='swal2-input' placeholder='Tipo' value='${tipo}'>` +
+            `<input id='swal-local' class='swal2-input' placeholder='Local' value='${local}'>` +
+            `<input id='swal-data' class='swal2-input' placeholder='Data' value='${data}'>` +
+            `<input id='swal-hp' class='swal2-input' placeholder='HP' value='${hp}'>` +
+            `<input id='swal-ataque' class='swal2-input' placeholder='Ataque' value='${ataque}'>` +
+            `<input id='swal-defesa' class='swal2-input' placeholder='Defesa' value='${defesa}'>` +
+            `<input id='swal-obs' class='swal2-input' placeholder='Observações' value='${obs}'>`,
+        confirmButtonText: 'Salvar',
+        showCancelButton: true,
+        preConfirm: () => {
+            return [
+                document.getElementById('swal-nome').value,
+                document.getElementById('swal-tipo').value,
+                document.getElementById('swal-local').value,
+                document.getElementById('swal-data').value,
+                document.getElementById('swal-hp').value,
+                document.getElementById('swal-ataque').value,
+                document.getElementById('swal-defesa').value,
+                document.getElementById('swal-obs').value
+            ];
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Envia via AJAX para editar_pokemon.php
+            fetch('editar_pokemon.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id_pokemon: id,
+                    nome_pokemon: result.value[0],
+                    tipo_pokemon: result.value[1],
+                    loc_pokemon: result.value[2],
+                    data_pokemon: result.value[3],
+                    hp_pokemon: result.value[4],
+                    ataque_pokemon: result.value[5],
+                    defesa_pokemon: result.value[6],
+                    obs_pokemon: result.value[7]
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.sucesso){
+                    Swal.fire('Salvo!', 'Pokémon editado com sucesso!', 'success').then(()=>location.reload());
+                }else{
+                    Swal.fire('Erro!', 'Não foi possível editar.', 'error');
+                }
+            });
+        }
+    });
+}
+</script>
 </body>
 </html>
