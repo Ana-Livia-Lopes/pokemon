@@ -39,7 +39,26 @@
             $resultado_pokemons = $conexao->query($sql);
             if ($resultado_pokemons->num_rows >0 ){
                 while($linha = $resultado_pokemons->fetch_assoc()){
-                    echo"<tr><td>".$linha['nome_pokemon']."</td><td>".$linha['tipo_pokemon']."</td><td>".$linha['loc_pokemon']."</td><td>".$linha['data_pokemon']."</td><td>".$linha['hp_pokemon']."</td><td>".$linha['ataque_pokemon']."</td><td>".$linha['defesa_pokemon']."</td><td>".$linha['obs_pokemon']."</td><td><div class='btn-editar' onclick=\"editarPokemon('{$linha['id_pokemon']}', '{$linha['nome_pokemon']}', '{$linha['tipo_pokemon']}', '{$linha['loc_pokemon']}', '{$linha['data_pokemon']}', '{$linha['hp_pokemon']}', '{$linha['ataque_pokemon']}', '{$linha['defesa_pokemon']}', '{$linha['obs_pokemon']}')\"><i class='fa-solid fa-pencil'></i></div></td></tr>";
+                    echo"<tr>
+<td>".$linha['nome_pokemon']."</td>
+<td>".$linha['tipo_pokemon']."</td>
+<td>".$linha['loc_pokemon']."</td>
+<td>".$linha['data_pokemon']."</td>
+<td>".$linha['hp_pokemon']."</td>
+<td>".$linha['ataque_pokemon']."</td>
+<td>".$linha['defesa_pokemon']."</td>
+<td>".$linha['obs_pokemon']."</td>
+<td>
+  <div style='display:inline-flex; gap:8px;'>
+    <div class='btn-editar' onclick=\"editarPokemon('{$linha['id_pokemon']}', '{$linha['nome_pokemon']}', '{$linha['tipo_pokemon']}', '{$linha['loc_pokemon']}', '{$linha['data_pokemon']}', '{$linha['hp_pokemon']}', '{$linha['ataque_pokemon']}', '{$linha['defesa_pokemon']}', '{$linha['obs_pokemon']}')\">
+      <i class='fa-solid fa-pencil'></i>
+    </div>
+    <div class='btn-excluir' onclick=\"excluirPokemon('{$linha['id_pokemon']}')\">
+      <i class='fa-solid fa-trash'></i>
+    </div>
+  </div>
+</td>
+</tr>";
                 }
             }
             if (!empty($pesquisa)) {
@@ -96,9 +115,9 @@
 
     ?>
  <hr>
-    <button id="btn-estatisticas" style="margin-bottom:5px;">estatísticas de tipos</button>
+    <button id="btn-estatisticas" style="margin-bottom:5px;">Estatísticas de tipos</button>
     <div id="estatisticas-tipos" style="display:none;">
-        <h2>Estatísticas de Tipos de Pokémon</h2>
+        <h2>Estatísticas de tipos de Pokémon</h2>
         <table>
             <thead>
                 <tr>
@@ -173,6 +192,32 @@ function editarPokemon(id, nome, tipo, local, data, hp, ataque, defesa, obs) {
                     Swal.fire('Salvo!', 'Pokémon editado com sucesso!', 'success').then(()=>location.reload());
                 }else{
                     Swal.fire('Erro!', 'Não foi possível editar.', 'error');
+                }
+            });
+        }
+    });
+}
+function excluirPokemon(id) {
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: 'Deseja realmente excluir este Pokémon?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('excluir_pokemon.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_pokemon: id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.sucesso){
+                    Swal.fire('Excluído!', 'Pokémon removido com sucesso!', 'success').then(()=>location.reload());
+                }else{
+                    Swal.fire('Erro!', 'Não foi possível excluir.', 'error');
                 }
             });
         }
