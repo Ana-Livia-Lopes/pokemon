@@ -9,12 +9,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $var_hp = $_POST["hp"];
     $var_ataque = $_POST["ataque"];
     $var_defesa = $_POST["defesa"];
-
-    $sql_insercao = "INSERT INTO cadastrar_pokemon (nome_pokemon, tipo_pokemon, loc_pokemon, data_pokemon, hp_pokemon, ataque_pokemon, defesa_pokemon) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    
+    //insset para verificar se uma variável foi definida e não é nula ai deixa mais seguro
+    $var_obs = isset($_POST["obs"]) ? $_POST["obs"] : '';
+    // Prepara a inserção no banco de dados para todos os campos
+    $sql_insercao = "INSERT INTO cadastrar_pokemon (nome_pokemon, tipo_pokemon, loc_pokemon, data_pokemon, hp_pokemon, ataque_pokemon, defesa_pokemon, obs_pokemon) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conexao->prepare($sql_insercao);
-
-    $stmt->bind_param("sssssss", $var_nome, $var_tipo, $var_loc, $var_data, $var_hp, $var_ataque, $var_defesa);
+    $stmt->bind_param("ssssssss", $var_nome, $var_tipo, $var_loc, $var_data, $var_hp, $var_ataque, $var_defesa, $var_obs);
 
     if ($stmt->execute()) {
         echo '<script>
@@ -37,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 });
               </script>';
     }
-
     $stmt->close();
     $conexao->close();
 }
