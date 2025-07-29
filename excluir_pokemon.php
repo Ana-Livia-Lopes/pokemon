@@ -1,3 +1,4 @@
+<!-- Ana Livia Lopes e Isadora Gomes -->
 <?php
 header('Content-Type: application/json');
 include 'conexao.php';

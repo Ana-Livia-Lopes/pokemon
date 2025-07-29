@@ -1,3 +1,4 @@
+<!-- Ana Livia Lopes e Isadora Gomes -->
 <?php
     $dbname = 'db_pokemon';
     $hostname = 'localhost';
