@@ -1,5 +1,5 @@
 <?php
-    $dbname = 'db_pokemon.sql';
+    $dbname = 'db_pokemon';
     $hostname = 'localhost';
     $password = '';
     $username = 'root';
