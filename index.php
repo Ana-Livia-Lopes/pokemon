@@ -1,22 +1,3 @@
-<?php
-    $dbname = 'db_editora';
-    $hostname = 'localhost';
-    $password = '';
-    $username = 'root';
-
-    $conexao = new mysqli($hostname, $username,$password, $dbname);
-
-    if ($conexao->connect_error) {
-        die("falha na coneção: ". $conexao->connect_error);
-    };
-
-    $sql_autores = "SELECT autores.nome_autor, livros.titulo_livro, livros.ano_livro, livros.genero_livro 
-    FROM livros
-    INNER JOIN autores ON livros.fk_id_autor = autores.id_autor
-    ORDER BY livros.titulo_livro DESC";
-    
-    $resultado_autores = $conexao -> query($sql_autores);
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,9 +26,11 @@
         </thead>
         <tbody>
             <?php
-            if ($resultado_autores->num_rows >0 ){
-                while($linha = $resultado_autores->fetch_assoc()){
-                echo"<tr><td>".$linha['nome_autor']."</td><td>".$linha['titulo_livro']."</td><td>".$linha['ano_livro']."</td><td>".$linha['genero_livro']."</td></tr>";
+            session_start();
+            include 'conexao.php';
+            if ($resultado_pokemons->num_rows >0 ){
+                while($linha = $resultado_pokemons->fetch_assoc()){
+                echo"<tr><td>".$linha['nome_pokemon']."</td><td>".$linha['tipo_pokemon']."</td><td>".$linha['loc_pokemon']."</td><td>".$linha['data_pokemon']."</td><td>".$linha['hp_pokemon']."</td><td>".$linha['ataque_pokemon']."</td><td>".$linha['defesa_pokemon']."</td><td>".$linha['obs_pokemon']."</td></tr>";
                 }
             }
             
@@ -69,16 +52,16 @@
     }
 
     if (!empty($pesquisa)) {
-        $sql_pesquisa = "SELECT livros.titulo_livro FROM livros WHERE livros.titulo_livro LIKE ?";
+        $sql_pesquisa = "SELECT * FROM pokemons WHERE nome LIKE ? OR tipo LIKE ? OR local_encontrado LIKE ? OR data_registro LIKE ? OR hp LIKE ? OR ataque LIKE ? OR defesa LIKE ? OR observacoes LIKE ?";
         $busca = "%".$pesquisa."%";
         $stmt = $conexao->prepare($sql_pesquisa);
-        $stmt->bind_param("s", $busca);
+        $stmt->bind_param("ssssssss", $busca, $busca, $busca, $busca, $busca, $busca, $busca, $busca);
         $stmt->execute();
         $resultados_pesquisa = $stmt->get_result();
     
         if ($resultados_pesquisa->num_rows > 0) {
             while ($linha_pesq = $resultados_pesquisa->fetch_assoc()) {
-                echo "<h4>".$linha_pesq['titulo_livro']."</h4>";
+                echo "<h4>".$linha_pesq['nome_pokemon']."</h4>";
             }
         }else{
             echo "<h4>Nenhum livro encontrado com o título: ".$pesquisa."</h4>";
