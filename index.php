@@ -5,20 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+  
     <div class="container">
-    <h1>Seus Pokémon</h1>
+    <h1>Coleção de Pokémons</h1>
     <div class="tabela-div"></div>
     <table>
-        <hr>
+        <!-- <hr> -->
         <thead>
             <tr>
-                <th>nome</th>
+                <th>Nome</th>
                 <th>Tipo</th>
-                <th>local encontrado</th>
+                <th>Local encontrado</th>
                 <th>Data do registro</th>
                 <th>HP</th>
                 <th>Ataque</th>
@@ -30,7 +34,7 @@
         <tbody>
             <?php
             session_start();
-            include 'conexao.php';
+            include 'conexao.php';  
             $sql = "SELECT * FROM cadastrar_pokemon";
             $resultado_pokemons = $conexao->query($sql);
             if ($resultado_pokemons->num_rows >0 ){
@@ -61,10 +65,10 @@
     <h2>Pesquisar Pokémon</h2>
     <form action="" method="post">
         <input type="text" id="titulo" name="titulo" required>
-        <button type="submit">Pesquisar</button>
+        <button id="search" type="submit">Pesquisar</button>
     </form>
-    
 
+<button onclick="window.location.href='cadastro.php'">Adicionar um Pokémon</button>
     <?php
     $pesquisa = "";
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['titulo'])) {
@@ -148,6 +152,6 @@ function editarPokemon(id, nome, tipo, local, data, hp, ataque, defesa, obs) {
         }
     });
 }
-</script>
+</script> 
 </body>
 </html>
